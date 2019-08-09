@@ -1,0 +1,26 @@
+{
+  "name": "flowlines",
+  "version": "1.0.0",
+  "description": "A Pixi.js Background of flowing lines ",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olivermulari/flowlines.git"
+  },
+  "keywords": [
+    "flowfield",
+    "pixi.js"
+  ],
+  "author": "Oliver Mulari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olivermulari/flowlines/issues"
+  },
+  "homepage": "https://github.com/olivermulari/flowlines#readme",
+  "dependencies": {
+    "pixi.js": "^5.1.0"
+  }
+}
