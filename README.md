@@ -1,6 +1,6 @@
 # Flowlines
 
-[![Build Status](https://travis-ci.org/olivermulari/flowlines.png?branch=master)](https://travis-ci.org/olivermulari/flowlines) . [![Node version](https://img.shields.io/node/v/flowlines.svg?style=flat)](http://nodejs.org/download/)
+[![Build Status](https://travis-ci.org/olivermulari/flowlines.png?branch=master)](https://travis-ci.org/olivermulari/flowlines) . [![npm](https://img.shields.io/npm/v/n.svg?style=flat-square)](https://www.npmjs.com/package/n)
 
 ..work in progress
 
