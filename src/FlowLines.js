@@ -3,19 +3,9 @@ import * as PIXI from 'pixi.js';
 
 export default class FlowLines {
   constructor() {
-    console.log("flowlines!");
     this.sceneid = "pixi-scene";
     this.options = {
-      debug: false,
-      floatSpeed: 0.0006,
-      flowStrength: 1.8,
-      perlinDiff: 0.006,
-      vectorUpdateFreq: 13,
-      particleAmount: 2000,
-      particleMaxSpeed: 4,
-      color: 0xFFFFF,
-      colorChangeSpeed: 0.1,
-      particleOpacity: 0.02
+      debug: false
     };
     this.app = new PIXI.Application({
       width: window.innerWidth,
@@ -48,13 +38,23 @@ export default class FlowLines {
   }
 
   addFpsCounter() {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      #fps {
+        position: absolute;
+        margin: 10px;
+        bottom: 0;
+        right: 0;
+      }
+      `;
+    document.head.appendChild(style);
     // FPS COUNTER
     const element = document.createElement("p");
     element.setAttribute("id", "fps");
-    document.getElementById("root").appendChild(element);
+    document.getElementById(this.sceneid).appendChild(element);
     setInterval(() => {
-      if (app) {
-        element.innerHTML = "FPS: " + String(Math.floor(app.ticker.FPS));
+      if (this.app) {
+        element.innerHTML = "FPS: " + String(Math.floor(this.app.ticker.FPS));
       }
     }, 1000);
   }
@@ -88,6 +88,7 @@ export default class FlowLines {
         top: 0;
         left: 0;
         overflow: hidden;
+        z-index: -10;
       }
       `;
     document.head.appendChild(style);

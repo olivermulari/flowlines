@@ -1,11 +1,11 @@
 import { Vec2 } from './Vector';
 
 export class Particle {
-  constructor(graphicsObj, options, containerVec, tileSize) {
+  constructor(field, graphicsObj, containerVec, tileSize) {
+    this.field = field;
     this.container = containerVec;
     this.tileSize = tileSize;
     this.el = graphicsObj;
-    this.options = options;
     this.radius = 3;
     this.pos = new Vec2(Math.floor(Math.random() * this.container.x), Math.floor(Math.random() * this.container.y));
     this.prevPos = null;
@@ -16,7 +16,7 @@ export class Particle {
 
   update(delta) {
     this.vel.add(this.acc.multiply(delta * 0.2));
-    this.vel.limit(this.options.particleMaxSpeed * delta);
+    this.vel.limit(this.field.particleMaxSpeed * delta);
     this.prevPos = this.pos.clone();
     this.pos.add(this.vel);
     this.acc.multiply(0);
@@ -34,14 +34,14 @@ export class Particle {
   }
 
   applyForce(vec) {
-    this.acc.add(vec.setMag(this.options.flowStrength));
+    this.acc.add(vec.setMag(this.field.flowStrength));
   }
 
   showLine() {
     if (this.prevPos) {
       this.el.clear();
-      this.el.beginFill(this.options.color, this.options.particleOpacity);
-      // this.el.beginFill(0xFFFFF, this.options.particleOpacity);
+      this.el.beginFill(this.field.color, this.field.particleOpacity);
+      // this.el.beginFill(0xFFFFF, this.field.particleOpacity);
       this.el.lineStyle(2)
         .moveTo(this.prevPos.x, this.prevPos.y)
         .lineTo(this.pos.x, this.pos.y);

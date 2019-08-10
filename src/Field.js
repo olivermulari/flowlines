@@ -6,20 +6,35 @@ import { Particle } from "./particle";
 import { Vec2 } from "./Vector";
 
 export class Field {
-  constructor(app, options) {
+  constructor(app, options, settings) {
     this.app = app;
-    this.options = options;
 
-    this.tileSize = 15;
-    this.lineLength = this.tileSize / 2;
+    this.options = options || {};
+    // options
+    this.particleAmount = this.options.particleAmount || PIXI.utils.isMobile.any ? 300 : 2000;
+    this.vectorUpdateFreq = this.options.vectorUpdateFreq || 13;
+    this.perlinDiff = this.options.perlinDiff || 0.006;
+    this.flowSpeed = this.options.flowSpeed || 0.0006;
+    this.flowStrength = this.options.flowStrength || 1.8;
+    this.particleMaxSpeed = this.options.particleMaxSpeed || 4;
+    this.colorChangeSpeed = this.options.colorChangeSpeed || 0.1;
+    this.particleOpacity = this.options.particleOpacity || 0.02;
+    this.color = this.options.color || 0xFFFFF;
+    this.debug = this.options.debug || false;
+    this.tileSize = 15; // good as a constant :)
+    
+    this.settings = settings || {};
+    // advanced settings
+    this.dynamicParticleAmount = this.settings.dynamicParticleAmount || false;
+    this.targetFps = this.settings.targetFps || 55;
 
     // main direction of vectors
     this.floatDir = Math.PI / 2;
-
     // if > 0, main direction of vectors will vary
     this.floatDirChangeSpeed = 0;
 
     // helpers to reduce calculations
+    this.lineLength = this.tileSize / 2;
     this.halfTileSize = this.tileSize / 2;
     this.cols = Math.ceil(this.app.screen.width / this.tileSize);
     this.rows = Math.ceil(this.app.screen.height / this.tileSize);
@@ -59,9 +74,9 @@ export class Field {
   }
 
   createParticles() {
-    for (let i = 0; i < this.options.particleAmount; i++) {
+    for (let i = 0; i < this.particleAmount; i++) {
       const graphics = new PIXI.Graphics();
-      const part = new Particle(graphics, this.options, new Vec2(this.app.screen.width, this.app.screen.height), this.tileSize);
+      const part = new Particle(this, graphics, new Vec2(this.app.screen.width, this.app.screen.height), this.tileSize);
       this.particles.push(part);
       this.app.stage.addChild(graphics);
     }
@@ -87,7 +102,7 @@ export class Field {
       obj.vec = new Vec2(this.lineLength * Math.cos(rotation), this.lineLength * Math.sin(rotation));
     });
 
-    if (this.options.debug) {
+    if (this.debug) {
       this.showVectors();
     }
   }
@@ -97,7 +112,7 @@ export class Field {
       part.checkEdges();
       part.follow(this.vectors);
       part.update(delta);
-      if (!this.options.debug) {
+      if (!this.debug) {
         part.showLine();
       } else {
         part.showBall();
@@ -105,26 +120,26 @@ export class Field {
     });
 
     if (this.frameCount % 5) {
-      const c = makeColorGradient(this.frameCount * /* delta */ this.options.colorChangeSpeed);
-      this.options.color = this.rgb(c[0], c[1], c[2]);
-      // this.options.color = this.rgb(this.frameCount % 265, 255 - this.frameCount % 265, 150);
+      const c = makeColorGradient(this.frameCount * /* delta */ this.colorChangeSpeed);
+      this.color = this.rgb(c[0], c[1], c[2]);
+      // this.color = this.rgb(this.frameCount % 265, 255 - this.frameCount % 265, 150);
     }
   }
 
   update(delta) {
-    if (this.frameCount % this.options.vectorUpdateFreq === 0) {
+    if (this.frameCount % this.vectorUpdateFreq === 0) {
       this.updateVectors(delta);
     }
     this.updateParticles(delta);
 
-    this.zOff += this.options.floatSpeed * delta;
+    this.zOff += this.flowSpeed * delta;
     // if you want to vary yout main flow direction
-    // this.floatDir += (this.options.floatSpeed * this.floatDirChangeSpeed * delta) % (Math.PI / 2);
+    // this.floatDir += (this.flowSpeed * this.floatDirChangeSpeed * delta) % (Math.PI / 2);
     this.frameCount++;
   }
   
   randomDir(x, y, z) {
-    const value = Math.abs(noise.perlin3(x * this.options.perlinDiff, y * this.options.perlinDiff, z)) * Math.PI * 4;
+    const value = Math.abs(noise.perlin3(x * this.perlinDiff, y * this.perlinDiff, z)) * Math.PI * 4;
     return value;
   }
 
@@ -135,6 +150,6 @@ export class Field {
   // UI METHODS
 
   toggleDebug() {
-    this.options.debug = !this.options.debug;
+    this.debug = !this.debug;
   }
 }
