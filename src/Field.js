@@ -2,9 +2,10 @@ import * as PIXI from 'pixi.js';
 
 import { makeColorGradient } from './color';
 import { noise } from "./perlin";
-import { Vec2, Particle } from "./particle";
+import { Particle } from "./particle";
+import { Vec2 } from "./Vector";
 
-export class Flowfield {
+export class Field {
   constructor(app, options) {
     this.app = app;
     this.options = options;
@@ -18,7 +19,7 @@ export class Flowfield {
     // if > 0, main direction of vectors will vary
     this.floatDirChangeSpeed = 0;
 
-    // helpers
+    // helpers to reduce calculations
     this.halfTileSize = this.tileSize / 2;
     this.cols = Math.ceil(this.app.screen.width / this.tileSize);
     this.rows = Math.ceil(this.app.screen.height / this.tileSize);
@@ -27,7 +28,7 @@ export class Flowfield {
     this.zOff = Math.floor(Math.random() * 100);
 
     // arrays of elements
-    this.flowField = [];
+    this.vectors = [];
     this.particles = [];
 
     // init
@@ -36,7 +37,6 @@ export class Flowfield {
   }
 
   createVectors() {
-    // vectors
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.cols; x++) {
         const graphics = new PIXI.Graphics();
@@ -52,7 +52,7 @@ export class Flowfield {
         const rotation = this.randomDir(obj.pos.x, obj.pos.y, this.zOff) + this.floatDir;
         obj.vec = new Vec2(this.lineLength * Math.cos(rotation), this.lineLength * Math.sin(rotation));
 
-        this.flowField.push(obj);
+        this.vectors.push(obj);
         this.app.stage.addChild(graphics);
       }
     }
@@ -68,7 +68,7 @@ export class Flowfield {
   }
 
   showVectors() {
-    this.flowField.forEach(obj => {
+    this.vectors.forEach(obj => {
       const endX = obj.pos.x + obj.vec.x;
       const endY = obj.pos.y + obj.vec.y;
 
@@ -82,7 +82,7 @@ export class Flowfield {
   }
 
   updateVectors(delta) {
-    this.flowField.forEach(obj => {
+    this.vectors.forEach(obj => {
       const rotation = this.randomDir(obj.pos.x, obj.pos.y, this.zOff) + this.floatDir;
       obj.vec = new Vec2(this.lineLength * Math.cos(rotation), this.lineLength * Math.sin(rotation));
     });
@@ -95,7 +95,7 @@ export class Flowfield {
   updateParticles(delta) {
     this.particles.forEach(part => {
       part.checkEdges();
-      part.follow(this.flowField);
+      part.follow(this.vectors);
       part.update(delta);
       if (!this.options.debug) {
         part.showLine();
@@ -118,6 +118,7 @@ export class Flowfield {
     this.updateParticles(delta);
 
     this.zOff += this.options.floatSpeed * delta;
+    // if you want to vary yout main flow direction
     // this.floatDir += (this.options.floatSpeed * this.floatDirChangeSpeed * delta) % (Math.PI / 2);
     this.frameCount++;
   }

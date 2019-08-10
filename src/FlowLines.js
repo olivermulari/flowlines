@@ -1,4 +1,4 @@
-import { Flowfield } from './Flowfield';
+import { Field } from './Field';
 import * as PIXI from 'pixi.js';
 
 export default class FlowLines {
@@ -26,9 +26,12 @@ export default class FlowLines {
       preserveDrawingBuffer: !this.options.debug,
       transparent: !this.options.debug
     });
-    this.flowField = new Flowfield(this.app, this.options);
-    this.createScene(this.sceneid);
+    this.field = new Field(this.app, this.options);
   }
+
+  create() {
+    this.createScene(this.sceneid);
+  };
 
   createScene(sceneid) {
     const div = document.createElement("div");
@@ -40,7 +43,7 @@ export default class FlowLines {
     this.addResizes();
   
     this.app.ticker.add(delta => {
-      this.flowField.update(delta);
+      this.field.update(delta);
     });
   }
 
