@@ -8,8 +8,9 @@ import { Vec2 } from "./Vector";
 export class Field {
   constructor(app, options, settings) {
     this.app = app;
-
     this.options = options || {};
+    this.settings = settings || {};
+
     // options
     this.particleAmount = this.options.particleAmount || PIXI.utils.isMobile.any ? 300 : 2000;
     this.vectorUpdateFreq = this.options.vectorUpdateFreq || 13;
@@ -23,7 +24,6 @@ export class Field {
     this.debug = this.options.debug || false;
     this.tileSize = 15; // good as a constant :)
     
-    this.settings = settings || {};
     // advanced settings
     this.dynamicParticleAmount = this.settings.dynamicParticleAmount || false;
     this.targetFps = this.settings.targetFps || 55;

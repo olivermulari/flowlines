@@ -2,10 +2,10 @@ import { Field } from './Field';
 import * as PIXI from 'pixi.js';
 
 export default class FlowLines {
-  constructor() {
+  constructor(options) {
     this.sceneid = "pixi-scene";
-    this.options = {
-      debug: false
+    this.options = options || {
+      debug: false,
     };
     this.app = new PIXI.Application({
       width: window.innerWidth,
