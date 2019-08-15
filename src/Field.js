@@ -11,13 +11,16 @@ export class Field {
     this.options = options || {};
     this.settings = settings || {};
 
+    // mobile test
+    this.isMobile = PIXI.utils.isMobile.any;
+
     // options
-    this.particleAmount = this.options.particleAmount || PIXI.utils.isMobile.any ? 300 : 2000;
+    this.particleAmount = this.options.particleAmount || (this.isMobile ? 300 : 2000);
     this.vectorUpdateFreq = this.options.vectorUpdateFreq || 13;
     this.perlinDiff = this.options.perlinDiff || 0.006;
     this.flowSpeed = this.options.flowSpeed || 0.0006;
     this.flowStrength = this.options.flowStrength || 1.8;
-    this.particleMaxSpeed = this.options.particleMaxSpeed || 4;
+    this.particleMaxSpeed = this.options.particleMaxSpeed || (4320 / window.innerWidth); // 4 in tabletop
     this.colorChangeSpeed = this.options.colorChangeSpeed || 0.1;
     this.particleOpacity = this.options.particleOpacity || 0.02;
     this.color = this.options.color || 0xFFFFF;

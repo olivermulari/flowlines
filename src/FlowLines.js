@@ -2,11 +2,17 @@ import { Field } from './Field';
 import * as PIXI from 'pixi.js';
 
 export default class FlowLines {
-  constructor(options) {
-    this.sceneid = "pixi-scene";
+  constructor(sceneid, options) {
+    this.givenId = sceneid;
+    this.sceneid = this.givenId ? this.givenId : "pixi-scene";
     this.options = options || {
       debug: false,
     };
+    this.app;
+    this.field;
+  }
+
+  create() {
     this.app = new PIXI.Application({
       width: window.innerWidth,
       height: window.innerHeight,
@@ -17,24 +23,37 @@ export default class FlowLines {
       transparent: !this.options.debug
     });
     this.field = new Field(this.app, this.options);
-  }
-
-  create() {
     this.createScene(this.sceneid);
   };
 
-  createScene(sceneid) {
-    const div = document.createElement("div");
-    div.setAttribute("id", sceneid);
-    document.body.appendChild(div);
-    div.appendChild(this.app.view);
+  destroy() {
+    this.app.ticker.destroy();
+    this.app = null;
+    this.field = null;
+  }
 
-    this.addStyleTags();
-    this.addResizes();
+  createScene(sceneid) {
+    let div;
+    if (this.givenId) {
+      div = document.getElementById(sceneid);
+      this.addEngineResize();
+    } else {
+      div = this.createDiv(sceneid);
+    }
   
+    div.appendChild(this.app.view);
     this.app.ticker.add(delta => {
       this.field.update(delta);
     });
+  }
+
+  createDiv(sceneid) {
+    const div = document.createElement("div");
+    div.setAttribute("id", sceneid);
+    document.body.appendChild(div);
+    this.addStyleTags();
+    this.addResizes();
+    return div;
   }
 
   addFpsCounter() {
@@ -60,6 +79,16 @@ export default class FlowLines {
   }
 
   addResizes() {
+    this.addEngineResize();
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+    window.addEventListener('resize', () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    });
+  }
+
+  addEngineResize() {
     window.onresize = (event) => {
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -67,13 +96,6 @@ export default class FlowLines {
       this.app.renderer.view.style.height = h + "px";
       this.app.renderer.resize(w, h);
     };
-
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-    window.addEventListener('resize', () => {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    });
   }
 
   addStyleTags() {
