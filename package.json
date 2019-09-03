@@ -1,6 +1,6 @@
 {
   "name": "flowlines",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A Pixi.js Background of flowing lines ",
   "main": "main.js",
   "scripts": {
