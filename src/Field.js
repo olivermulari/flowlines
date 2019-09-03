@@ -8,8 +8,8 @@ import { Vec2 } from "./Vector";
 export class Field {
   constructor(app, options, settings) {
     this.app = app;
-    this.options = options || {};
-    this.settings = settings || {};
+    this.options = options || {};
+    this.settings = settings || {};
 
     // mobile test
     this.isMobile = PIXI.utils.isMobile.any;
@@ -20,13 +20,13 @@ export class Field {
     this.perlinDiff = this.options.perlinDiff || 0.006;
     this.flowSpeed = this.options.flowSpeed || 0.0006;
     this.flowStrength = this.options.flowStrength || 1.8;
-    this.particleMaxSpeed = this.options.particleMaxSpeed || (0.0037 * window.innerWidth); // 4 in tabletop
+    this.particleMaxSpeed = this.options.particleMaxSpeed || Math.min(0.0037 * window.innerWidth, 4); // 4 in tabletop max 4
     this.colorChangeSpeed = this.options.colorChangeSpeed || 0.1;
     this.particleOpacity = this.options.particleOpacity || 0.02;
     this.color = this.options.color || 0xFFFFF;
     this.debug = this.options.debug || false;
     this.tileSize = 15; // good as a constant :)
-    
+
     // advanced settings
     this.dynamicParticleAmount = this.settings.dynamicParticleAmount || false;
     this.targetFps = this.settings.targetFps || 55;
@@ -140,7 +140,7 @@ export class Field {
     // this.floatDir += (this.flowSpeed * this.floatDirChangeSpeed * delta) % (Math.PI / 2);
     this.frameCount++;
   }
-  
+
   randomDir(x, y, z) {
     const value = Math.abs(noise.perlin3(x * this.perlinDiff, y * this.perlinDiff, z)) * Math.PI * 4;
     return value;
