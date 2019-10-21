@@ -15,14 +15,14 @@ export class Field {
     this.isMobile = PIXI.utils.isMobile.any;
 
     // options
-    this.particleAmount = this.options.particleAmount || (this.isMobile ? 500 : 3000);
-    this.vectorUpdateFreq = this.options.vectorUpdateFreq || 13;
+    this.particleAmount = this.options.particleAmount || (this.isMobile ? 1000 : 4000);
+    this.vectorUpdateFreq = this.options.vectorUpdateFreq || 10;
     this.perlinDiff = this.options.perlinDiff || 0.006;
-    this.flowSpeed = this.options.flowSpeed || 0.0006;
-    this.flowStrength = this.options.flowStrength || 1.8;
+    this.flowSpeed = this.options.flowSpeed || 0.0003;
+    this.flowStrength = this.options.flowStrength || Math.min(0.0012 * window.innerWidth, 2.5); // 1.8
     this.particleMaxSpeed = this.options.particleMaxSpeed || Math.min(0.0037 * window.innerWidth, 4); // 4 in tabletop max 4
-    this.colorChangeSpeed = this.options.colorChangeSpeed || 0.1;
-    this.particleOpacity = this.options.particleOpacity || 0.02;
+    this.colorChangeSpeed = this.options.colorChangeSpeed || 0.03;
+    this.particleOpacity = this.options.particleOpacity || 0.015;
     this.color = this.options.color || 0xFFFFF;
     this.debug = this.options.debug || false;
     this.tileSize = 15; // good as a constant :)
