@@ -15,7 +15,7 @@ export class Field {
     this.isMobile = PIXI.utils.isMobile.any;
 
     // options
-    this.particleAmount = this.options.particleAmount || (this.isMobile ? 300 : 1500);
+    this.particleAmount = this.options.particleAmount || (this.isMobile ? 500 : 3000);
     this.vectorUpdateFreq = this.options.vectorUpdateFreq || 13;
     this.perlinDiff = this.options.perlinDiff || 0.006;
     this.flowSpeed = this.options.flowSpeed || 0.0006;
@@ -49,18 +49,22 @@ export class Field {
     this.vectors = [];
     this.particles = [];
 
+    // graphic element
+    this.vectorGraphics;
+    this.particleGraphics;
+
     // init
     this.createVectors();
     this.createParticles();
   }
 
   createVectors() {
+    const graphics = new PIXI.Graphics();
+    this.app.stage.addChild(graphics);
+
     for (let y = 0; y < this.rows; y++) {
       for (let x = 0; x < this.cols; x++) {
-        const graphics = new PIXI.Graphics();
-
         const obj = {
-          element: graphics,
           color: 0xFFFFF,
           pos: new Vec2((x * this.tileSize) + this.halfTileSize, (y * this.tileSize) + this.halfTileSize),
           vec: new Vec2(0, 0)
@@ -71,32 +75,37 @@ export class Field {
         obj.vec = new Vec2(this.lineLength * Math.cos(rotation), this.lineLength * Math.sin(rotation));
 
         this.vectors.push(obj);
-        this.app.stage.addChild(graphics);
       }
     }
+
+    this.vectorGraphics = graphics;
   }
 
   createParticles() {
+    const graphics = new PIXI.Graphics();
+    this.app.stage.addChild(graphics);
+    
     for (let i = 0; i < this.particleAmount; i++) {
-      const graphics = new PIXI.Graphics();
-      const part = new Particle(this, graphics, new Vec2(this.app.screen.width, this.app.screen.height), this.tileSize);
+      const part = new Particle(this, new Vec2(this.app.screen.width, this.app.screen.height), this.tileSize);
       this.particles.push(part);
-      this.app.stage.addChild(graphics);
     }
+
+    this.particleGraphics = graphics;
   }
 
   showVectors() {
+    this.vectorGraphics.clear();
+
     this.vectors.forEach(obj => {
       const endX = obj.pos.x + obj.vec.x;
       const endY = obj.pos.y + obj.vec.y;
 
-      obj.element.clear();
-      obj.element.beginFill(obj.color, 0.5);
-      obj.element.lineStyle(1)
+      this.vectorGraphics.beginFill(obj.color, 0.5);
+      this.vectorGraphics.lineStyle(1)
         .moveTo(obj.pos.x, obj.pos.y)
         .lineTo(endX, endY);
-      // vec.element.endFill();
     });
+    this.vectorGraphics.endFill();
   }
 
   updateVectors(delta) {
@@ -111,16 +120,31 @@ export class Field {
   }
 
   updateParticles(delta) {
+    this.particleGraphics.clear();
+
     this.particles.forEach(part => {
       part.checkEdges();
       part.follow(this.vectors);
       part.update(delta);
+
+      // draw
       if (!this.debug) {
-        part.showLine();
+
+        this.particleGraphics.beginFill(this.color, this.particleOpacity);
+        this.particleGraphics.lineStyle(2)
+          .moveTo(part.prevPos.x, part.prevPos.y)
+          .lineTo(part.pos.x, part.pos.y);
+
       } else {
-        part.showBall();
+
+        this.particleGraphics.lineStyle(0);
+        this.particleGraphics.beginFill(0xFFFFFF);
+        this.particleGraphics.drawCircle(part.pos.x, part.pos.y, part.radius);
+
       }
     });
+
+    this.particleGraphics.endFill();
 
     if (this.frameCount % 5) {
       const c = makeColorGradient(this.frameCount * /* delta */ this.colorChangeSpeed);

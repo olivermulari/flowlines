@@ -1,12 +1,11 @@
 import { Vec2 } from './Vector';
 
 export class Particle {
-  constructor(field, graphicsObj, containerVec, tileSize) {
+  constructor(field, containerVec, tileSize) {
     this.field = field;
     this.container = containerVec;
     this.tileSize = tileSize;
-    this.el = graphicsObj;
-    this.radius = 3;
+    this.radius = 2;
     this.pos = new Vec2(Math.floor(Math.random() * this.container.x), Math.floor(Math.random() * this.container.y));
     this.prevPos = null;
     this.vel = new Vec2(0, 0);
@@ -35,26 +34,6 @@ export class Particle {
 
   applyForce(vec) {
     this.acc.add(vec.setMag(this.field.flowStrength));
-  }
-
-  showLine() {
-    if (this.prevPos) {
-      this.el.clear();
-      this.el.beginFill(this.field.color, this.field.particleOpacity);
-      // this.el.beginFill(0xFFFFF, this.field.particleOpacity);
-      this.el.lineStyle(2)
-        .moveTo(this.prevPos.x, this.prevPos.y)
-        .lineTo(this.pos.x, this.pos.y);
-      this.el.endFill();
-    }
-  }
-
-  showBall() {
-    this.el.clear();
-    this.el.lineStyle(0);
-    this.el.beginFill(0xFFFFFF);
-    this.el.drawCircle(this.pos.x, this.pos.y, this.radius);
-    this.el.endFill();
   }
 
   checkEdges() {
