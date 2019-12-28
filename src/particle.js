@@ -15,7 +15,7 @@ export class Particle {
 
   update(delta) {
     this.vel.add(this.acc.multiply(delta * 0.2));
-    this.vel.limit(this.field.particleMaxSpeed * delta);
+    this.vel.limit(this.field.particleMaxSpeed);
     this.prevPos = this.pos.clone();
     this.pos.add(this.vel);
     this.acc.multiply(0);

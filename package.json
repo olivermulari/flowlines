@@ -1,7 +1,7 @@
 {
   "name": "flowlines",
   "version": "1.1.0",
-  "description": "A Pixi.js Background of flowing lines ",
+  "description": "Line graphics",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/olivermulari/flowlines#readme",
   "dependencies": {
-    "pixi.js": "^5.1.0"
+    "@olivermulari/graphics": "^1.0.4"
   }
 }

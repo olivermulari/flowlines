@@ -1,10 +1,12 @@
 import { Field } from './Field';
-import * as PIXI from 'pixi.js';
+import GRAPHICS from "@olivermulari/graphics";
 
+/**
+ * Flowlines
+ */
 export default class FlowLines {
-  constructor(sceneid, options) {
-    this.givenId = sceneid;
-    this.sceneid = this.givenId ? this.givenId : "pixi-scene";
+  constructor(divID, options) {
+    this.divID = divID;
     this.options = options || {
       debug: false,
     };
@@ -13,11 +15,9 @@ export default class FlowLines {
   }
 
   create() {
-    this.app = new PIXI.Application({
+    this.app = new GRAPHICS(this.divID, {
       width: window.innerWidth,
       height: window.innerHeight,
-      backgroundColor: 0x000000,
-      resolution: 1,
       clearBeforeRender: this.options.debug,
       preserveDrawingBuffer: !this.options.debug,
       transparent: !this.options.debug
@@ -27,33 +27,17 @@ export default class FlowLines {
   };
 
   destroy() {
-    this.app.ticker.destroy();
+    this.app.destroy();
+    this.field.destroy();
     this.app = null;
     this.field = null;
   }
 
   createScene(sceneid) {
-    let div;
-    if (this.givenId) {
-      div = document.getElementById(sceneid);
-      this.addEngineResize();
-    } else {
-      div = this.createDiv(sceneid);
-    }
-  
-    div.appendChild(this.app.view);
-    this.app.ticker.add(delta => {
-      this.field.update(delta);
+    this.app.renderer.runRenderLoop(delta => {
+      this.app.scene.render();
+      this.field.update(delta*1000);
     });
-  }
-
-  createDiv(sceneid) {
-    const div = document.createElement("div");
-    div.setAttribute("id", sceneid);
-    document.body.appendChild(div);
-    this.addStyleTags();
-    this.addResizes();
-    return div;
   }
 
   addFpsCounter() {
@@ -79,7 +63,7 @@ export default class FlowLines {
   }
 
   addResizes() {
-    this.addEngineResize();
+    //this.addEngineResize();
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
     window.addEventListener('resize', () => {
