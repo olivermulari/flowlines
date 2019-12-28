@@ -1,3 +1,5 @@
+import GRAPHICS from '@olivermulari/graphics/src/graphics';
+
 export function makeColorGradient(i,
   frequency1, frequency2, frequency3,
   phase1, phase2, phase3,
@@ -19,5 +21,5 @@ export function makeColorGradient(i,
   const grn = Math.sin(frequency2*i + phase2) * width + center;
   const blu = Math.sin(frequency3*i + phase3) * width + center;
 
-  return [red, grn, blu];
+  return new GRAPHICS.Color(red/256, grn/256, blu/256);
 }
