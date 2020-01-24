@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/olivermulari/flowlines#readme",
   "dependencies": {
-    "@olivermulari/graphics": "^1.0.4"
+    "valojs": "^1.0.2"
   }
 }

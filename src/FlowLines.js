@@ -1,5 +1,5 @@
 import { Field } from './Field';
-import GRAPHICS from "@olivermulari/graphics";
+import VALO from "valojs";
 
 /**
  * Flowlines
@@ -15,12 +15,13 @@ export default class FlowLines {
   }
 
   create() {
-    this.app = new GRAPHICS(this.divID, {
+    this.app = new VALO(this.divID, {
       width: window.innerWidth,
       height: window.innerHeight,
       clearBeforeRender: this.options.debug,
       preserveDrawingBuffer: !this.options.debug,
-      transparent: !this.options.debug
+      transparent: !this.options.debug,
+      autoResize: true,
     });
     this.field = new Field(this.app, this.options);
     this.createScene(this.sceneid);
@@ -63,23 +64,12 @@ export default class FlowLines {
   }
 
   addResizes() {
-    //this.addEngineResize();
     const vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
     window.addEventListener('resize', () => {
       const vh = window.innerHeight * 0.01;
       document.documentElement.style.setProperty('--vh', `${vh}px`);
     });
-  }
-
-  addEngineResize() {
-    window.onresize = (event) => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      this.app.renderer.view.style.width = w + "px";
-      this.app.renderer.view.style.height = h + "px";
-      this.app.renderer.resize(w, h);
-    };
   }
 
   addStyleTags() {

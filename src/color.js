@@ -1,4 +1,4 @@
-import GRAPHICS from '@olivermulari/graphics/src/graphics';
+import VALOJS from 'valojs';
 
 export function makeColorGradient(i,
   frequency1, frequency2, frequency3,
@@ -21,5 +21,5 @@ export function makeColorGradient(i,
   const grn = Math.sin(frequency2*i + phase2) * width + center;
   const blu = Math.sin(frequency3*i + phase3) * width + center;
 
-  return new GRAPHICS.Color(red/256, grn/256, blu/256);
+  return new VALOJS.Color(red/256, grn/256, blu/256);
 }

@@ -2,8 +2,8 @@ import { makeColorGradient } from './color';
 import { noise } from "./perlin";
 import { Particle } from "./particle";
 import { Vec2 } from "./Vector";
-import { isMobile } from "@olivermulari/graphics/src/utils/mobile"
-import Color from '@olivermulari/graphics/src/utils/color';
+import { isMobile } from "valojs/src/utils/mobile"
+import Color from 'valojs/src/utils/color';
 
 /**
  * Vector field object
@@ -55,6 +55,9 @@ export class Field {
     // init
     this.createVectors();
     this.createParticles();
+
+    // custom blending function
+    // this.setBlendingFunction(this.app.renderer.gl);
   }
 
   /**
