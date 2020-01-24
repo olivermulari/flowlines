@@ -1,6 +1,6 @@
 {
   "name": "@olivermulari/flowlines",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Line graphics",
   "main": "main.js",
   "scripts": {
